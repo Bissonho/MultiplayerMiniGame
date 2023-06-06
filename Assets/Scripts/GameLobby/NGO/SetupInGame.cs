@@ -40,9 +40,8 @@ namespace LobbyRelaySample.ngo
         async Task CreateNetworkManager(LocalLobby localLobby, LocalPlayer localPlayer)
         {
             m_lobby = localLobby;
-            m_inGameRunner = Instantiate(m_IngameRunnerPrefab).GetComponentInChildren<InGameRunner>();
-            m_inGameRunner.Initialize(OnConnectionVerified, m_lobby.PlayerCount, OnGameBegin, OnGameEnd,
-                localPlayer);
+           //m_inGameRunner = Instantiate(m_IngameRunnerPrefab).GetComponentInChildren<InGameRunner>();
+            //m_inGameRunner.Initialize(OnConnectionVerified, m_lobby.PlayerCount, OnGameBegin, OnGameEnd,localPlayer);
             if (localPlayer.IsHost.Value)
             {
                 await SetRelayHostData();

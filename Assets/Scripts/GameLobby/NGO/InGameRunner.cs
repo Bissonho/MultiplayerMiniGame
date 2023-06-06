@@ -13,7 +13,7 @@ namespace LobbyRelaySample.ngo
     public class InGameRunner : NetworkBehaviour
     {
         [SerializeField]
-        private PlayerCursor m_playerCursorPrefab = default;
+        private Player m_playerCursorPrefab = default;
         [SerializeField]
         private SymbolContainer m_symbolContainerPrefab = default;
         [SerializeField]
@@ -128,7 +128,7 @@ namespace LobbyRelaySample.ngo
         private void VerifyConnectionConfirm_ServerRpc(PlayerData clientData)
         {
             // Note that the client will not receive the cursor object reference, so the cursor must handle initializing itself.
-            PlayerCursor playerCursor = Instantiate(m_playerCursorPrefab);
+            Player playerCursor = Instantiate(m_playerCursorPrefab);
             playerCursor.NetworkObject.SpawnWithOwnership(clientData.id);
             playerCursor.name += clientData.name;
             m_dataStore.AddPlayer(clientData.id, clientData.name);

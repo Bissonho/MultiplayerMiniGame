@@ -10,18 +10,16 @@ namespace LobbyRelaySample.ngo
     /// The host will use this object's movement for detecting collision with symbol objects.
     /// </summary>
     [RequireComponent(typeof(Collider))]
-    public class PlayerCursor : NetworkBehaviour
+    public class Player : NetworkBehaviour
     {
-        
-        [SerializeField]
-        SpriteRenderer m_renderer = default;
-        [SerializeField]
-        ParticleSystem m_onClickParticles = default;
-        [SerializeField]
         TMPro.TMP_Text m_nameOutput = default;
         Camera m_mainCamera;
         NetworkVariable<Vector3> m_position = new NetworkVariable<Vector3>(Vector3.zero);
         ulong m_localId;
+
+        [SerializeField] private float _speed;
+        [SerializeField] private CharacterController _characterController;
+        [SerializeField] private PlayerControl _playerControl;
 
         // If the local player cursor spawns before this cursor's owner, the owner's data won't be available yet. This is used to retrieve the data later.
         Action<ulong, Action<PlayerData>> m_retrieveName;
@@ -29,13 +27,50 @@ namespace LobbyRelaySample.ngo
         // The host is responsible for determining if a player has successfully selected a symbol object, since collisions should be handled serverside.
         List<SymbolObject> m_currentlyCollidingSymbols;
 
+        void Start()
+        {
+            _playerControl = new PlayerControl();
+            _playerControl.Enable();
+            _characterController = GetComponent<CharacterController>();
+        }
+
+        public override void OnNetworkSpawn()
+        {
+
+            base.OnNetworkSpawn();
+
+            if (!IsOwner)
+            {
+                enabled = false;
+                _characterController.enabled = false; 
+                return;
+            }
+
+            Cursor.lockState = CursorLockMode.Locked;
+            //_playerScore = GetComponent<PlayerScore>();
+            //_playerScore.ScoreVariable.OnValueChanged += _playerScore.OnScoreChanged;
+        }
+
+        void Update()
+        {
+            if (!IsOwner)
+                return;
+
+            if (_playerControl.Player.Move.inProgress)
+            {
+                Vector2 move = _playerControl.Player.Move.ReadValue<Vector2>();
+                Vector3 move3D = new Vector3(move.x, 0, move.y);
+                _characterController.Move(move3D * _speed * Time.deltaTime);
+            }
+        }
+
         /// <summary>
         /// This cursor is spawned in dynamically but needs references to some scene objects. Pushing full object references over RPC calls
         /// is an option if we create custom data for each and ensure they're all spawned on the host correctly, but it's simpler to do
         /// some one-time retrieval here instead.
         /// This also sets up the visuals to make remote player cursors appear distinct from the local player's cursor.
         /// </summary>
-        public override void OnNetworkSpawn()
+        /*public override void OnNetworkSpawn()
         {
             m_retrieveName = NetworkedDataStore.Instance.GetPlayerData;
             m_mainCamera = GameObject.Find("InGameCamera").GetComponent<Camera>();
@@ -44,19 +79,6 @@ namespace LobbyRelaySample.ngo
                 m_currentlyCollidingSymbols = new List<SymbolObject>();
             m_localId = NetworkManager.Singleton.LocalClientId;
 
-            // Other players' cursors should be less prominent than the local player's cursor.
-            if (OwnerClientId != m_localId)
-            {
-                m_renderer.transform.localScale *= 0.75f;
-                m_renderer.color = new Color(1, 1, 1, 0.5f);
-                var trails = m_onClickParticles.trails;
-                trails.colorOverLifetime = new ParticleSystem.MinMaxGradient(Color.grey);
-            }
-            else
-            {
-                m_renderer.enabled =
-                    false; // The local player should see their cursor instead of the simulated cursor object, since the object will appear laggy.
-            }
         }
 
         [ClientRpc]
@@ -99,15 +121,6 @@ namespace LobbyRelaySample.ngo
                 SymbolObject symbol = m_currentlyCollidingSymbols[0];
                 InGameRunner.Instance.OnPlayerInput(id, symbol);
             }
-
-            OnInputVisuals_ClientRpc();
-        }
-
-        [ClientRpc]
-        private void OnInputVisuals_ClientRpc()
-        {
-            m_onClickParticles.Stop(false, ParticleSystemStopBehavior.StopEmitting);
-            m_onClickParticles.Play();
         }
 
         public void OnTriggerEnter(Collider other)
@@ -132,10 +145,11 @@ namespace LobbyRelaySample.ngo
                 m_currentlyCollidingSymbols.Remove(symbol);
         }
 
+
         public void OnGameBegan()
         {
             m_retrieveName.Invoke(OwnerClientId, SetName_ClientRpc);
             InGameRunner.Instance.onGameBeginning -= OnGameBegan;
-        }
+        }*/
     }
 }

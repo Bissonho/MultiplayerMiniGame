@@ -370,7 +370,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 457234252}
   m_LocalRotation: {x: 0.6701954, y: -0, z: -0, w: 0.7421848}
-  m_LocalPosition: {x: 0, y: 11.46, z: -4.21}
+  m_LocalPosition: {x: 0, y: 23, z: -4.21}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -479,7 +479,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68534273b83a79541a851a4a734b439c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 0}
+  prefab: {fileID: 8903440478677552936, guid: 23b3529864ca3d744a04be33a58588e5, type: 3}
 --- !u!1 &788267441 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 8628454958398271551, guid: 9aae991127b410c45a001ecd7f75311d, type: 3}
@@ -729,7 +729,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PooledPrefabsList:
   - Prefab: {fileID: 8903440478677552936, guid: 23b3529864ca3d744a04be33a58588e5, type: 3}
-    PrewarmCount: 500
+    PrewarmCount: 50
 --- !u!4 &944653537
 Transform:
   m_ObjectHideFlags: 0

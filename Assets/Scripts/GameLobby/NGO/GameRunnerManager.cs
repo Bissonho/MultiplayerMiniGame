@@ -46,7 +46,7 @@ namespace LobbyRelaySample.ngo
         private float m_timeout = 10;
         private bool m_hasConnected = false;
 
-        private const float GAME_DURATION = 5f; // Duração do jogo em segundos
+        [SerializeField] private const float GAME_DURATION = 5f; // Duração do jogo em segundos
         private float counter = 0f;
         private bool gameRunning = false;
 
@@ -88,7 +88,7 @@ namespace LobbyRelaySample.ngo
                 counter += Time.deltaTime;
 
                 //UIManager.Instance.SetTime((int)counter);
-                 UnityEngine.Debug.Log("Tempo: " + (int)counter);
+                //UnityEngine.Debug.Log("Tempo: " + (int)counter);
 
                 if (counter >= GAME_DURATION)
                 {

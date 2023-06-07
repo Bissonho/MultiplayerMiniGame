@@ -88,9 +88,7 @@ namespace LobbyRelaySample.ngo
 
         public override void OnNetworkSpawn()
         {
-
-            if (IsOwner)
-                scoreData.AddPlayerServerRpc(OwnerClientId, GetId(m_localUserData.name), m_localUserData.name);
+            scoreData.AddPlayerServerRpc(NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name), m_localUserData.name);
         }
 
 

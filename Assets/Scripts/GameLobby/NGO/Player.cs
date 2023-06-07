@@ -34,9 +34,6 @@ namespace LobbyRelaySample.ngo
         public override void OnNetworkSpawn()
         {      
             base.OnNetworkSpawn();
-            m_retrieveName = Score.Instance.GetPlayerData;
-            GameRunnerManager.Instance.onGameBeginning += OnGameBegan;
-
             if (!IsOwner)
             {
                 enabled = false;
@@ -56,27 +53,6 @@ namespace LobbyRelaySample.ngo
                 Vector3 move3D = new Vector3(move.x, 0, move.y);
                 _characterController.Move(move3D * _speed * Time.deltaTime);
             }
-        }
-
-        [ClientRpc]
-        private void SetName_ClientRpc(PlayerData data)
-        {
-            Debug.Log("SetName_ClientRpc" + "---" + data.name);
-            if (!IsOwner)
-                m_name.text = data.name;
-        }
-
-        [ClientRpc]
-        private void SetId_ClientRpc(ulong id)
-        {
-            if (!IsOwner)
-                m_id = id;
-        }
-
-        public void OnGameBegan()
-        {
-            m_retrieveName.Invoke(OwnerClientId, SetName_ClientRpc);
-            GameRunnerManager.Instance.onGameBeginning -= OnGameBegan;
         }
     }
 }

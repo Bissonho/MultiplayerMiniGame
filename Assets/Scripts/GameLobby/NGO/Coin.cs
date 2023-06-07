@@ -16,8 +16,7 @@ public class Coin : NetworkBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GameRunnerManager.Instance.scoreData.UpdateScoreServerRpc(other.gameObject.GetComponent<NetworkObject>().OwnerClientId, 10);
-            //playerScore.IncreaseScoreServerRpc(10);
+            GameRunnerManager.Instance.scoreData.UpdateScoreServerRpc(NetworkManager.Singleton.LocalClientId, 10);
         }
 
         RemoveCoinServerRpc();

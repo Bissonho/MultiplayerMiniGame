@@ -23,7 +23,7 @@ namespace LobbyRelaySample.ngo
 
             m_localId = NetworkManager.Singleton.LocalClientId;
 
-            Debug.LogWarning("OnNetworkSpawn");
+            Debug.LogWarning("OnNetworkSpawn" + m_localId.ToString());
         }
 
         [ServerRpc(RequireOwnership = false)]
@@ -32,10 +32,10 @@ namespace LobbyRelaySample.ngo
             if (!IsHost)
                 return;
 
-            if (!playerData.ContainsKey(playerId))
+            if (!playerData.ContainsKey(OwnerClientId))
                 playerData.Add(OwnerClientId, new PlayerData(name, playerId, 0));
             else
-                playerData[playerId] = new PlayerData(name, playerId, 0);
+                playerData[OwnerClientId] = new PlayerData(name, playerId, 0);
             Debug.Log("AddPlayer" + "---" + playerId + "----" + name);
         }
 
@@ -43,9 +43,6 @@ namespace LobbyRelaySample.ngo
         [ServerRpc]
         public void UpdateScoreServerRpc(ulong id, int delta)
         {
-            if (!IsHost)
-                return;
-
             if (playerData.TryGetValue(id, out var data))
             {
                 data.score += delta;
@@ -56,8 +53,6 @@ namespace LobbyRelaySample.ngo
             {
                 Debug.LogError("Player not found in dictionary: " + id);
             }
-
-            printAllPlayersConnectedServerRpc();
         }
 
         [ClientRpc]
@@ -78,32 +73,6 @@ namespace LobbyRelaySample.ngo
             foreach (var playerData in playerData)
             {
                 Debug.Log(playerData.Value.id.ToString() + ": " + playerData.Value.score.ToString());
-            }
-        }
-
-
-        // Recupera os dados de um jogador, passando-o para o retorno de chamada onGet
-        public void GetPlayerData(ulong targetId, Action<PlayerData> onGet)
-        {
-            m_onGetCurrentCallback = onGet;
-            GetPlayerData_ServerRpc(targetId, m_localId);
-        }
-
-        [ServerRpc(RequireOwnership = false)]
-        void GetPlayerData_ServerRpc(ulong id, ulong callerId)
-        {
-            if (playerData.ContainsKey(id))
-                GetPlayerData_ClientRpc(callerId, playerData[id]);
-            else
-                GetPlayerData_ClientRpc(callerId, new PlayerData(null, 0));
-        }
-
-        [ClientRpc]
-        public void GetPlayerData_ClientRpc(ulong callerId, PlayerData data)
-        {
-            if (callerId == m_localId)
-            {   m_onGetCurrentCallback?.Invoke(data);
-                m_onGetCurrentCallback = null;
             }
         }
     }

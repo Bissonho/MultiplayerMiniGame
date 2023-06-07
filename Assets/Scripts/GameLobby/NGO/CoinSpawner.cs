@@ -9,6 +9,8 @@ public class CoinSpawner : NetworkBehaviour
 
     private const int MaxPrefabCount = 100;
 
+    private const int initialSpawnedQuantity = 10;
+
 
     private Coroutine spawnCoroutine;
 
@@ -22,7 +24,7 @@ public class CoinSpawner : NetworkBehaviour
     private void SpawnCoinStart()
     {
         NetworkManager.Singleton.OnServerStarted -= SpawnCoinStart;
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < initialSpawnedQuantity; i++)
         {
             SpawnCoin();
         }

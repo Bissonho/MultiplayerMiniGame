@@ -14,16 +14,15 @@ public class CoinSpawner : NetworkBehaviour
 
     private Coroutine spawnCoroutine;
 
-
     private void Start()
     {
         NetworkManager.Singleton.OnServerStarted += SpawnCoinStart;
+        NetworkManager.Singleton.OnServerStopped += StopCoinSpawning;
     }
 
 
     private void SpawnCoinStart()
     {
-        NetworkManager.Singleton.OnServerStarted -= SpawnCoinStart;
         for (int i = 0; i < initialSpawnedQuantity; i++)
         {
             SpawnCoin();
@@ -32,7 +31,7 @@ public class CoinSpawner : NetworkBehaviour
         spawnCoroutine = StartCoroutine(SpawnOverTime());
     }
 
-    public void stopSpawning()
+    private void StopCoinSpawning(bool value)
     {
         if (spawnCoroutine != null)
         {

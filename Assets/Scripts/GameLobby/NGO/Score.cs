@@ -5,41 +5,38 @@ using System.Collections.Generic;
 using TMPro;
 using System.Text;
 using System.Collections;
+using System;
 
 namespace LobbyRelaySample.ngo
 {
-    public class Score : NetworkBehaviour
+    public class Score : NetworkBehaviourSingleton<Score>
     {
         Dictionary<ulong, PlayerData> playerData = new Dictionary<ulong, PlayerData>();
+        Action<PlayerData> m_onGetCurrentCallback;
 
         public TMP_Text _scoreText;
+        ulong m_localId;
 
         public override void OnNetworkSpawn()
         {
             base.OnNetworkSpawn();
 
+            m_localId = NetworkManager.Singleton.LocalClientId;
+
             Debug.LogWarning("OnNetworkSpawn");
         }
 
-        [ServerRpc]
-        public void AddPlayerServerRpc(ulong id, string name)
+        [ServerRpc(RequireOwnership = false)]
+        public void AddPlayerServerRpc(ulong OwnerClientId,ulong playerId, string name)
         {
-            Debug.Log("AddPlayer" + "---" + id + "----" + name);
             if (!IsHost)
                 return;
 
-            if (!playerData.ContainsKey(id))
-                playerData.Add(id, new PlayerData(name, id, 0));
+            if (!playerData.ContainsKey(playerId))
+                playerData.Add(OwnerClientId, new PlayerData(name, playerId, 0));
             else
-                playerData[id] = new PlayerData(name, id, 0);
-        }
-
-
-        public void UpdateScore(ulong id, int delta)
-        {
-            PrintPlayerData();
-            if (IsHost)
-                UpdateScoreServerRpc(id, delta);
+                playerData[playerId] = new PlayerData(name, playerId, 0);
+            Debug.Log("AddPlayer" + "---" + playerId + "----" + name);
         }
 
 
@@ -52,9 +49,15 @@ namespace LobbyRelaySample.ngo
             if (playerData.TryGetValue(id, out var data))
             {
                 data.score += delta;
+                Debug.Log("UpdateScoreOutput_ClientRpc" + "---" + id + "----" + data.score);
+                UpdateScoreClientRpc(id, data.score);
             }
-            Debug.Log("UpdateScoreOutput_ClientRpc" + "---" + id + "----" + playerData[id].score);
-            UpdateScoreClientRpc(id, playerData[id].score);
+            else
+            {
+                Debug.LogError("Player not found in dictionary: " + id);
+            }
+
+            printAllPlayersConnectedServerRpc();
         }
 
         [ClientRpc]
@@ -69,19 +72,39 @@ namespace LobbyRelaySample.ngo
         }
 
 
-        void PrintPlayerData()
+        [ServerRpc]
+        void printAllPlayersConnectedServerRpc()
         {
-
-            StringBuilder data = new StringBuilder();
-
             foreach (var playerData in playerData)
             {
-                string playerId = playerData.Value.id.ToString();
-                string playerScore = playerData.Value.score.ToString();
-                data.AppendLine(playerId + ": " + playerScore);
+                Debug.Log(playerData.Value.id.ToString() + ": " + playerData.Value.score.ToString());
             }
+        }
 
-            Debug.Log(data.ToString());
+
+        // Recupera os dados de um jogador, passando-o para o retorno de chamada onGet
+        public void GetPlayerData(ulong targetId, Action<PlayerData> onGet)
+        {
+            m_onGetCurrentCallback = onGet;
+            GetPlayerData_ServerRpc(targetId, m_localId);
+        }
+
+        [ServerRpc(RequireOwnership = false)]
+        void GetPlayerData_ServerRpc(ulong id, ulong callerId)
+        {
+            if (playerData.ContainsKey(id))
+                GetPlayerData_ClientRpc(callerId, playerData[id]);
+            else
+                GetPlayerData_ClientRpc(callerId, new PlayerData(null, 0));
+        }
+
+        [ClientRpc]
+        public void GetPlayerData_ClientRpc(ulong callerId, PlayerData data)
+        {
+            if (callerId == m_localId)
+            {   m_onGetCurrentCallback?.Invoke(data);
+                m_onGetCurrentCallback = null;
+            }
         }
     }
 }

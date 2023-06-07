@@ -12,20 +12,15 @@ namespace LobbyRelaySample.ngo
     [RequireComponent(typeof(Collider))]
     public class Player : NetworkBehaviour
     {
-        TMPro.TMP_Text m_nameOutput = default;
-        Camera m_mainCamera;
-        NetworkVariable<Vector3> m_position = new NetworkVariable<Vector3>(Vector3.zero);
-        ulong m_localId;
+        TMPro.TMP_Text m_name = default;
+        ulong m_id;
+
+        Action<ulong, Action<PlayerData>> m_retrieveName;
+        Action<ulong, Action<PlayerData>> m_retrieveId;
 
         [SerializeField] private float _speed;
         [SerializeField] private CharacterController _characterController;
         [SerializeField] private PlayerControl _playerControl;
-
-        // If the local player cursor spawns before this cursor's owner, the owner's data won't be available yet. This is used to retrieve the data later.
-        Action<ulong, Action<PlayerData>> m_retrieveName;
-
-        // The host is responsible for determining if a player has successfully selected a symbol object, since collisions should be handled serverside.
-        List<SymbolObject> m_currentlyCollidingSymbols;
 
         void Start()
         {
@@ -34,21 +29,20 @@ namespace LobbyRelaySample.ngo
             _characterController = GetComponent<CharacterController>();
         }
 
-        public override void OnNetworkSpawn()
-        {
+        
 
+        public override void OnNetworkSpawn()
+        {      
             base.OnNetworkSpawn();
+            m_retrieveName = Score.Instance.GetPlayerData;
+            GameRunnerManager.Instance.onGameBeginning += OnGameBegan;
 
             if (!IsOwner)
             {
                 enabled = false;
-                _characterController.enabled = false; 
+                _characterController.enabled = false;
                 return;
             }
-
-            //Cursor.lockState = CursorLockMode.Locked;
-            //_playerScore = GetComponent<PlayerScore>();
-            //_playerScore.ScoreVariable.OnValueChanged += _playerScore.OnScoreChanged;
         }
 
         void Update()
@@ -64,42 +58,25 @@ namespace LobbyRelaySample.ngo
             }
         }
 
-        /// <summary>
-        /// This cursor is spawned in dynamically but needs references to some scene objects. Pushing full object references over RPC calls
-        /// is an option if we create custom data for each and ensure they're all spawned on the host correctly, but it's simpler to do
-        /// some one-time retrieval here instead.
-        /// This also sets up the visuals to make remote player cursors appear distinct from the local player's cursor.
-        /// </summary>
-        /*public override void OnNetworkSpawn()
-        {
-            m_retrieveName = NetworkedDataStore.Instance.GetPlayerData;
-            m_mainCamera = GameObject.Find("InGameCamera").GetComponent<Camera>();
-            InGameRunner.Instance.onGameBeginning += OnGameBegan;
-            if (IsHost)
-                m_currentlyCollidingSymbols = new List<SymbolObject>();
-            m_localId = NetworkManager.Singleton.LocalClientId;
-
-        }
-
         [ClientRpc]
         private void SetName_ClientRpc(PlayerData data)
         {
+            Debug.Log("SetName_ClientRpc" + "---" + data.name);
             if (!IsOwner)
-                m_nameOutput.text = data.name;
+                m_name.text = data.name;
         }
 
-
-        [ServerRpc] // Leave (RequireOwnership = true) for these so that only the player whose cursor this is can make updates.
-        private void SetPosition_ServerRpc(Vector3 position)
+        [ClientRpc]
+        private void SetId_ClientRpc(ulong id)
         {
-            m_position.Value = position;
+            if (!IsOwner)
+                m_id = id;
         }
-
 
         public void OnGameBegan()
         {
             m_retrieveName.Invoke(OwnerClientId, SetName_ClientRpc);
-            InGameRunner.Instance.onGameBeginning -= OnGameBegan;
-        }*/
+            GameRunnerManager.Instance.onGameBeginning -= OnGameBegan;
+        }
     }
 }

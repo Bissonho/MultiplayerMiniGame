@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -30,7 +31,7 @@ namespace LobbyRelaySample.ngo
     /// </summary>
     public class GameRunnerManager : NetworkBehaviourSingleton<GameRunnerManager>
     {
-     
+
         public Score scoreData;
 
         public Action onGameBeginning;
@@ -43,21 +44,18 @@ namespace LobbyRelaySample.ngo
         //private NetworkedDataStore m_dataStore = default;
 
 
-        private float m_timeout = 10;
+        private float m_timeout = 5;
         private bool m_hasConnected = false;
 
-        [SerializeField] private const float GAME_DURATION = 5f; // Duração do jogo em segundos
+        [SerializeField] private float GAME_DURATION = 5f; // Duração do jogo em segundos
         private float counter = 0f;
         private bool gameRunning = false;
 
         //[SerializeField]
         //private SymbolContainer m_symbolContainerInstance;
-        private PlayerData
-            m_localUserData; // This has an ID that's not necessarily the OwnerClientId, since all clients will see all spawned objects regardless of ownership.
+        private PlayerData m_localUserData; // This has an ID that's not necessarily the OwnerClientId, since all clients will see all spawned objects regardless of ownership.
 
-        public void Initialize(Action onConnectionVerified, int expectedPlayerCount, Action onGameBegin,
-            Action onGameEnd,
-            LocalPlayer localUser)
+        public void Initialize(Action onConnectionVerified, int expectedPlayerCount, Action onGameBegin, Action onGameEnd, LocalPlayer localUser)
         {
             m_onConnectionVerified = onConnectionVerified;
             m_expectedPlayerCount = expectedPlayerCount;
@@ -67,12 +65,35 @@ namespace LobbyRelaySample.ngo
             m_localUserData = new PlayerData(localUser.DisplayName.Value, 0);
         }
 
-        public override void OnNetworkSpawn()
+        private ulong GetId(string word)
         {
-            scoreData.AddPlayerServerRpc(m_localUserData.id, m_localUserData.name);
+            string id = string.Empty;
+            if (word.Length < 3)
+            {
+                id = word;
+            }
+            else
+            {
+                id = word.Substring(word.Length - 3);
+            }
+
+            ulong result = 0;
+            if (!ulong.TryParse(id, out result))
+            {
+                throw new Exception("Não foi possível converter a string em um valor ulong.");
+            }
+
+            return result;
         }
 
-      
+        public override void OnNetworkSpawn()
+        {
+
+            if (IsOwner)
+                scoreData.AddPlayerServerRpc(OwnerClientId, GetId(m_localUserData.name), m_localUserData.name);
+        }
+
+
         private void Update()
         {
             if (m_timeout >= 0)

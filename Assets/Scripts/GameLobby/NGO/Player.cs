@@ -46,7 +46,7 @@ namespace LobbyRelaySample.ngo
                 return;
             }
 
-            Cursor.lockState = CursorLockMode.Locked;
+            //Cursor.lockState = CursorLockMode.Locked;
             //_playerScore = GetComponent<PlayerScore>();
             //_playerScore.ScoreVariable.OnValueChanged += _playerScore.OnScoreChanged;
         }
@@ -88,61 +88,11 @@ namespace LobbyRelaySample.ngo
                 m_nameOutput.text = data.name;
         }
 
-        // It'd be better to have a separate input handler, but we don't need the mouse input anywhere else, so keep it simple.
-        private bool IsSelectInputHit()
-        {
-            return Input.GetMouseButtonDown(0);
-        }
-
-        public void Update()
-        {
-            transform.position = m_position.Value;
-            if (m_mainCamera == null || !IsOwner)
-                return;
-
-            Vector3 targetPos = (Vector2)m_mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x,
-                Input.mousePosition.y, -m_mainCamera.transform.position.z));
-            SetPosition_ServerRpc(targetPos); // Client can't set a network variable value.
-            if (IsSelectInputHit())
-                SendInput_ServerRpc(m_localId);
-        }
 
         [ServerRpc] // Leave (RequireOwnership = true) for these so that only the player whose cursor this is can make updates.
         private void SetPosition_ServerRpc(Vector3 position)
         {
             m_position.Value = position;
-        }
-
-        [ServerRpc]
-        private void SendInput_ServerRpc(ulong id)
-        {
-            if (m_currentlyCollidingSymbols.Count > 0)
-            {
-                SymbolObject symbol = m_currentlyCollidingSymbols[0];
-                InGameRunner.Instance.OnPlayerInput(id, symbol);
-            }
-        }
-
-        public void OnTriggerEnter(Collider other)
-        {
-            if (!IsHost)
-                return;
-            SymbolObject symbol = other.GetComponent<SymbolObject>();
-            if (symbol == null)
-                return;
-            if (!m_currentlyCollidingSymbols.Contains(symbol))
-                m_currentlyCollidingSymbols.Add(symbol);
-        }
-
-        public void OnTriggerExit(Collider other)
-        {
-            if (!IsHost)
-                return;
-            SymbolObject symbol = other.GetComponent<SymbolObject>();
-            if (symbol == null)
-                return;
-            if (m_currentlyCollidingSymbols.Contains(symbol))
-                m_currentlyCollidingSymbols.Remove(symbol);
         }
 
 

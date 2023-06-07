@@ -63,7 +63,7 @@ public class CoinSpawner : NetworkBehaviour
 
     private Vector3 GetRandomPositionOnMap()
     {
-        return new Vector3(Random.Range(-100f, 100f), 0.5f, Random.Range(-10f, 10f));
+        return new Vector3(Random.Range(-10f, 10f), 0.5f, Random.Range(-10f, 10f));
     }
 
 }

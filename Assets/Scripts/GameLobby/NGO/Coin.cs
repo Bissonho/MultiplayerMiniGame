@@ -1,3 +1,4 @@
+using LobbyRelaySample.ngo;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ public class Coin : NetworkBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            //var playerScore = other.gameObject.GetComponent<PlayerScore>();
+            GameRunnerManager.Instance.scoreData.UpdateScore(other.gameObject.GetComponent<NetworkObject>().OwnerClientId, 10);
             //playerScore.IncreaseScoreServerRpc(10);
         }
 

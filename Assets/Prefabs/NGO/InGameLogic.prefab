@@ -816,10 +816,10 @@ GameObject:
   - component: {fileID: 5289034077109495657}
   - component: {fileID: 6673480979101889538}
   - component: {fileID: 6829526275642584874}
-  - component: {fileID: 2250928641321586401}
   - component: {fileID: 2257191875943382526}
   - component: {fileID: 4478514896869440358}
   - component: {fileID: 6636000542315549800}
+  - component: {fileID: 7673805043161725786}
   m_Layer: 0
   m_Name: InGameRunner
   m_TagString: Untagged
@@ -851,19 +851,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1306704497370578788}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e30fcbc5a3738e94a87d7a028a2a6fba, type: 3}
+  m_Script: {fileID: 11500000, guid: c4e0419cf7a2db04da8425732b731b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_playerCursorPrefab: {fileID: 4403165428829500588, guid: 905594b4ee5bb864a84af916cc445d1b, type: 3}
-  m_symbolContainerPrefab: {fileID: 210836793418873202, guid: f42ed38d10b57ec48870f76a7a63389e, type: 3}
-  m_symbolObjectPrefab: {fileID: -8192876538761676823, guid: e371ca3112f9e244ab574b472387b64b, type: 3}
-  m_sequenceSelector: {fileID: 6829526275642584874}
-  m_scorer: {fileID: 2250928641321586401}
-  m_killVolume: {fileID: 3287911880781162359}
-  m_introOutroRunner: {fileID: 6828649701235740815}
-  m_dataStore: {fileID: 2257191875943382526}
-  m_collider: {fileID: 4478514896869440358}
-  m_symbolContainerInstance: {fileID: 0}
+  scoreData: {fileID: 7673805043161725786}
 --- !u!114 &6829526275642584874
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -881,35 +872,6 @@ MonoBehaviour:
   - {fileID: 82602402459208677}
   - {fileID: 2579125671427676891}
   - {fileID: 6639276723346236408}
---- !u!114 &2250928641321586401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1306704497370578788}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d90dac0e0ae417b4ea7f60baf966db37, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_dataStore: {fileID: 2257191875943382526}
-  m_scoreOutputText: {fileID: 4345563381811920084}
-  m_onGameEnd:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 4210703794441540767}
-        m_TargetAssemblyTypeName: LobbyRelaySample.ngo.ResultsUserUI, LobbyRelaySample
-        m_MethodName: ReceiveScoreInOrder
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
 --- !u!114 &2257191875943382526
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -949,8 +911,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GlobalObjectIdHash: 951099334
   AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
   DontDestroyWithOwner: 0
   AutoObjectParentSync: 1
+--- !u!114 &7673805043161725786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1306704497370578788}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aca14e48060614c4e93fd5c5a367889a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _scoreText: {fileID: 4345563381811920084}
 --- !u!1 &1912141680601921478
 GameObject:
   m_ObjectHideFlags: 0
@@ -4439,8 +4417,6 @@ GameObject:
   - component: {fileID: 8063659512749448051}
   - component: {fileID: 3393947122200987252}
   - component: {fileID: 3239721210338799976}
-  - component: {fileID: 9205289577047239847}
-  - component: {fileID: 6828649701235740815}
   m_Layer: 5
   m_Name: InGameCanvas
   m_TagString: Untagged
@@ -4515,40 +4491,6 @@ MonoBehaviour:
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
   m_PresetInfoIsWorld: 0
---- !u!95 &9205289577047239847
-Animator:
-  serializedVersion: 4
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7460461347722702836}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: c01005020548c754c81f738e21ae2217, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
---- !u!114 &6828649701235740815
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7460461347722702836}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f7a308a72bf6ce4a862a246eaed82cb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_inGameRunner: {fileID: 6673480979101889538}
-  m_animator: {fileID: 9205289577047239847}
 --- !u!1 &7760914309000979352
 GameObject:
   m_ObjectHideFlags: 0

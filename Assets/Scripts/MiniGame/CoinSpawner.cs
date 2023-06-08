@@ -5,17 +5,36 @@ using UnityEngine;
 
 public class CoinSpawner : NetworkBehaviour
 {
-    public GameObject prefab;
+    [SerializeField]
+    private GameObject prefab;
 
-    private const int MaxPrefabCount = 100;
+    [SerializeField]
+    private int MaxPrefabCount = 100;
 
-    private const int initialSpawnedQuantity = 10;
+    [SerializeField]
+    private int initialSpawnedQuantity = 10;
 
+    [SerializeField]
+    private float minX = -25f;
+
+    [SerializeField]
+    private float maxX = 25f;
+
+    [SerializeField]
+    private float minY = -25f;
+
+    [SerializeField]
+    private float maxY = 25f;
 
     private Coroutine spawnCoroutine;
 
     private void Start()
     {
+        if (prefab == null)
+        {
+            Debug.LogError("Coin Spawner Prefab is not attached!");
+            return;
+        }
         NetworkManager.Singleton.OnServerStarted += SpawnCoinStart;
         NetworkManager.Singleton.OnServerStopped += StopCoinSpawning;
     }
@@ -62,7 +81,7 @@ public class CoinSpawner : NetworkBehaviour
 
     private Vector3 GetRandomPositionOnMap()
     {
-        return new Vector3(Random.Range(-10f, 10f), 0.5f, Random.Range(-10f, 10f));
+        return new Vector3(Random.Range(minX, maxX), Random.Range(minY, maxY), 0);
     }
 
 }

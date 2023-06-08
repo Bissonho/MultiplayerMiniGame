@@ -2,6 +2,8 @@
 
 ## Descrição do Projeto
 
+ <img width=80% height=20% src="Readme/game.gif">
+
 MultiplayerMiniGame é um jogo pequeno que suporta de dois a quatro usuários conectados no mapa, competindo para coletar moedas. O objetivo é obter mais moedas do que os outros jogadores.
 
 O projeto possui um pool de objetos funcionando em network e está configurado para iniciar com 10mil moedas. 

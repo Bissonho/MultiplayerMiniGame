@@ -72,7 +72,7 @@ namespace LobbyRelaySample.ngo
             if (!gameRunning)
                 return;
 
-            if (IsServer)
+            if (IsHost)
             {
                 m_TimeRemaining.Value -= 1.0f;
 
@@ -96,7 +96,7 @@ namespace LobbyRelaySample.ngo
         [ClientRpc]
         private void RpcSyncTimeRemainingClientRpc(float timeRemaining)
         {
-            m_TimeRemaining.Value = timeRemaining;
+            TimerText.SetText("{0}", Mathf.CeilToInt(timeRemaining));
         }
 
         private ulong GetId(string word)
@@ -146,9 +146,6 @@ namespace LobbyRelaySample.ngo
             m_onGameEnd(); // As a backup to ensure in-game objects get cleaned up, if this is disconnected unexpectedly.
         }
 
-        /// <summary>
-        /// The game will begin either when all players have connected successfully or after a timeout.
-        /// </summary>
         void BeginGame()
         {
             m_canSpawnCoins = true;

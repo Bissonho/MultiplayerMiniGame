@@ -4,9 +4,14 @@
 
 MultiplayerMiniGame é um jogo pequeno que suporta de dois a quatro usuários conectados no mapa, competindo para coletar moedas. O objetivo é obter mais moedas do que os outros jogadores.
 
+O projeto possui um pool de objetos funcionando em network e está configurado para iniciar com 10mil moedas. 
+
 O jogo utiliza os serviços de Lobby, Relay e Voice/Chat da Unity Game Service, aproveitando o template de gerenciamento de Lobby para facilitar o desenvolvimento. A API de lobby da Unity é altamente funcional e possui uma excelente documentação.
 
 Para facilitar o teste do servidor/cliente, o projeto utiliza o PerreySync para duplicar o projeto. Além disso, o sistema de hot reload for Unity (link) é utilizado, permitindo a edição de scripts Unity em tempo de desenvolvimento e acelerando a interação e a velocidade de desenvolvimento.
+
+
+
 
 
 

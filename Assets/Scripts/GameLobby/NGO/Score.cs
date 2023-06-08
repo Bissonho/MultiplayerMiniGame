@@ -64,7 +64,7 @@ namespace LobbyRelaySample.ngo
             {
                 foreach (var playerData in playerData)
                 {
-                    Debug.Log($"{playerData.Value.id}: {playerData.Value.score}");
+                    Debug.Log($" Player Store Current {playerData.Value.id}: {playerData.Value.score}");
                 }
             }
         }

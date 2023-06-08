@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using Leaderboard;
+using TMPro;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -33,20 +34,21 @@ namespace LobbyRelaySample.ngo
     /// </summary>
     public class GameRunnerManager : NetworkBehaviourSingleton<GameRunnerManager>
     {
+
+        public TMP_Text TimerText = null;
+
+        private NetworkVariable<float> m_TimeRemaining = new NetworkVariable<float>(30.0f);
+
+
+
         public Action onGameBeginning;
         Action m_onConnectionVerified, m_onGameEnd;
-        private int
-            m_expectedPlayerCount; // Used by the host, but we can't call the RPC until the network connection completes.
+        private int m_expectedPlayerCount; // Used by the host, but we can't call the RPC until the network connection completes.
         private bool? m_canSpawnCoins;
-
-        //[SerializeField]
-        //private NetworkedDataStore m_dataStore = default;
-
 
         private float m_timeout = 5;
         private bool m_hasConnected = false;
 
-        [SerializeField] private float GAME_DURATION = 5f; // Duração do jogo em segundos
         private float counter = 0f;
         private bool gameRunning = false;
 
@@ -62,6 +64,39 @@ namespace LobbyRelaySample.ngo
             m_onGameEnd = onGameEnd;
             m_canSpawnCoins = false;
             m_localUserData = new PlayerData(localUser.DisplayName.Value, 0);
+        }
+
+
+        private void UpdateGameTimer()
+        {
+            if (!gameRunning)
+                return;
+
+            if (IsServer)
+            {
+                m_TimeRemaining.Value -= 1.0f;
+
+                if (m_TimeRemaining.Value <= 0.0f)
+                {
+                    m_TimeRemaining.Value = 0.0f;
+                    EndGame();
+                }
+            }
+
+            TimerText.SetText("{0}", Mathf.CeilToInt(m_TimeRemaining.Value));
+
+            // Sincronizar o valor do tempo restante para os clientes
+            if (IsHost)
+            {
+                RpcSyncTimeRemainingClientRpc(m_TimeRemaining.Value);
+            }
+
+        }
+
+        [ClientRpc]
+        private void RpcSyncTimeRemainingClientRpc(float timeRemaining)
+        {
+            m_TimeRemaining.Value = timeRemaining;
         }
 
         private ulong GetId(string word)
@@ -88,6 +123,11 @@ namespace LobbyRelaySample.ngo
         public override void OnNetworkSpawn()
         {
             Score.Instance.AddPlayerServerRpc(m_localUserData.name, NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name));
+
+            if (IsHost)
+            {
+                InvokeRepeating(nameof(UpdateGameTimer), 0.0f, 1.0f);
+            }
         }
 
 
@@ -98,22 +138,6 @@ namespace LobbyRelaySample.ngo
                 m_timeout -= Time.deltaTime;
                 if (m_timeout < 0)
                     BeginGame();
-            }
-
-
-            if (gameRunning)
-            {
-                counter += Time.deltaTime;
-
-                //UIManager.Instance.SetTime((int)counter);
-                //UnityEngine.Debug.Log("Tempo: " + (int)counter);
-
-                if (counter >= GAME_DURATION)
-                {
-                    // Finalizar o jogo
-                    EndGame();
-                }
-
             }
         }
 
@@ -131,16 +155,6 @@ namespace LobbyRelaySample.ngo
             GameManager.Instance.BeginGame();
             gameRunning = true;
             onGameBeginning?.Invoke();
-            //m_introOutroRunner.DoIntro(StartMovingSymbols);
-        }
-
-
-        // Essa função é chamada pelo servidor quando o jogo precisa terminar. Uma vez que isso acontece, o servidor precisa informar aos clientes para limparem seus objetos de rede primeiro, 
-        /// pois desconectar antes disso impedirá que eles façam isso (já que não podem receber eventos de despawn do servidor desconectado). ///
-        [ClientRpc]
-        private void WaitForEndingSequence_ClientRpc()
-        {
-            //m_scorer.OnGameEnd();
         }
 
         private async Task EndGame()

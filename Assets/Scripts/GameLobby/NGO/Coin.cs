@@ -16,7 +16,9 @@ public class Coin : NetworkBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            GameRunnerManager.Instance.scoreData.UpdateScoreServerRpc(NetworkManager.Singleton.LocalClientId, 10);
+            Debug.Log("Player collided with coin client ID" + NetworkManager.Singleton.LocalClientId);
+            Score.Instance.UpdateScoreServerRpc(NetworkManager.Singleton.LocalClientId, 10); // Fixed code
+            Score.Instance.PrintPlayerDataServerRpc(); // Fixed code
         }
 
         RemoveCoinServerRpc();

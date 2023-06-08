@@ -31,9 +31,6 @@ namespace LobbyRelaySample.ngo
     /// </summary>
     public class GameRunnerManager : NetworkBehaviourSingleton<GameRunnerManager>
     {
-
-        public Score scoreData;
-
         public Action onGameBeginning;
         Action m_onConnectionVerified, m_onGameEnd;
         private int
@@ -88,7 +85,7 @@ namespace LobbyRelaySample.ngo
 
         public override void OnNetworkSpawn()
         {
-            scoreData.AddPlayerServerRpc(NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name), m_localUserData.name);
+            Score.Instance.AddPlayerServerRpc(m_localUserData.name,NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name));
         }
 
 

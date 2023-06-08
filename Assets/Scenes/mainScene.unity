@@ -3581,6 +3581,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 8628454959292210618, guid: 9aae991127b410c45a001ecd7f75311d, type: 3}
+      propertyPath: m_text
+      value: MiniGame Multiplayer
+      objectReference: {fileID: 0}
     - target: {fileID: 8690778207903056580, guid: 9aae991127b410c45a001ecd7f75311d, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

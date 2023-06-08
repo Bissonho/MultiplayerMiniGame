@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e651dbb3fbac04af2b8f5abf007ddc23, type: 3}
-  m_Name: NetworkPrefabs--62834
+  m_Name: NetworkPrefabs
   m_EditorClassIdentifier: 
   IsDefault: 0
   List:
@@ -20,12 +20,12 @@ MonoBehaviour:
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
   - Override: 0
-    Prefab: {fileID: 5240148789413552765, guid: f42ed38d10b57ec48870f76a7a63389e, type: 3}
+    Prefab: {fileID: 8903440478677552936, guid: 23b3529864ca3d744a04be33a58588e5, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}
   - Override: 0
-    Prefab: {fileID: 8828823320646980938, guid: e371ca3112f9e244ab574b472387b64b, type: 3}
+    Prefab: {fileID: 6162890663815659679, guid: f68847c86a991cc41aaac550d12d451f, type: 3}
     SourcePrefabToOverride: {fileID: 0}
     SourceHashToOverride: 0
     OverridingTargetPrefab: {fileID: 0}

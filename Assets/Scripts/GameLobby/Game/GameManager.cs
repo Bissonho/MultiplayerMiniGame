@@ -27,6 +27,7 @@ namespace LobbyRelaySample
         Menu = 1,
         Lobby = 2,
         JoinMenu = 4,
+        Leaderboard = 8,
     }
 
     /// <summary>

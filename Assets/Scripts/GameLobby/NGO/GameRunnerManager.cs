@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
+using Leaderboard;
 using Unity.Netcode;
 using UnityEngine;
 
@@ -85,7 +87,7 @@ namespace LobbyRelaySample.ngo
 
         public override void OnNetworkSpawn()
         {
-            Score.Instance.AddPlayerServerRpc(m_localUserData.name,NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name));
+            Score.Instance.AddPlayerServerRpc(m_localUserData.name, NetworkManager.Singleton.LocalClientId, GetId(m_localUserData.name));
         }
 
 
@@ -141,8 +143,20 @@ namespace LobbyRelaySample.ngo
             //m_scorer.OnGameEnd();
         }
 
-        private void EndGame()
+        private async Task EndGame()
         {
+            Dictionary<ulong, PlayerData> playersData = Score.Instance.GetPlayerDataDictionary();
+            var players = new List<LeaderboardRepository.Player>();
+
+
+            foreach (var player in playersData)
+            {
+                players.Add(new LeaderboardRepository.Player(player.Value.score, player.Value.name));
+                Debug.Log("Player: " + player.Value.name + " Score: " + player.Value.score);
+            }
+
+            await LeaderBoardManager.Instance.CreateSession(players);
+
             if (IsHost)
                 StartCoroutine(EndGame_ClientsFirst());
         }

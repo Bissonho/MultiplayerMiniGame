@@ -7,7 +7,8 @@ namespace LobbyRelaySample.UI
     public enum JoinCreateTabs
     {
         Join,
-        Create
+        Create,
+        Leaderboard,
     }
 
     /// <summary>
@@ -40,6 +41,14 @@ namespace LobbyRelaySample.UI
         {
             CurrentTab = JoinCreateTabs.Create;
         }
+
+        
+        public void SetLeaderboard()
+        {
+            CurrentTab = JoinCreateTabs.Leaderboard;
+        }
+
+        
 
         void GameStateChanged(GameState state)
         {

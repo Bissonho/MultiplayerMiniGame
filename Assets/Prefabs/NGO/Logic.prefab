@@ -2372,8 +2372,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4e0419cf7a2db04da8425732b731b3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scoreData: {fileID: 7565428544562427749}
-  GAME_DURATION: 100
+  GAME_DURATION: 10
 --- !u!114 &6547637019264887995
 MonoBehaviour:
   m_ObjectHideFlags: 0

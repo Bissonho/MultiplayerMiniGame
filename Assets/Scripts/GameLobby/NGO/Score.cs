@@ -10,6 +10,8 @@ namespace LobbyRelaySample.ngo
         {
             Dictionary<ulong, PlayerData> playerData = new Dictionary<ulong, PlayerData>();
 
+            public Dictionary<ulong, PlayerData> GetPlayerDataDictionary() { return playerData; }
+
             public TMP_Text scoreText = null;
             ulong localId;
 

@@ -44,7 +44,7 @@ namespace LobbyRelaySample
         LocalPlayer m_LocalUser;
         LocalLobby m_LocalLobby;
 
-        vivox.VivoxSetup m_VivoxSetup = new vivox.VivoxSetup();
+        //vivox.VivoxSetup m_VivoxSetup = new vivox.VivoxSetup();
         [SerializeField]
         List<vivox.VivoxUserHandler> m_vivoxUserHandlers;
 
@@ -288,7 +288,7 @@ namespace LobbyRelaySample
 
             await InitializeServices();
             AuthenticatePlayer();
-            StartVivoxLogin();
+            //StartVivoxLogin();
         }
 
         async Task InitializeServices()
@@ -361,7 +361,7 @@ namespace LobbyRelaySample
             await LobbyManager.BindLocalLobbyToRemote(m_LocalLobby.LobbyID.Value, m_LocalLobby);
             m_LocalLobby.LocalLobbyState.onChanged += OnLobbyStateChanged;
             SetLobbyView();
-            StartVivoxJoin();
+            //StartVivoxJoin();
         }
 
         public void LeaveLobby()
@@ -371,11 +371,11 @@ namespace LobbyRelaySample
             LobbyManager.LeaveLobbyAsync();
 #pragma warning restore 4014
             ResetLocalLobby();
-            m_VivoxSetup.LeaveLobbyChannel();
+            //m_VivoxSetup.LeaveLobbyChannel();
             LobbyList.Clear();
         }
 
-        void StartVivoxLogin()
+        /*void StartVivoxLogin()
         {
             m_VivoxSetup.Initialize(m_vivoxUserHandlers, OnVivoxLoginComplete);
 
@@ -387,9 +387,9 @@ namespace LobbyRelaySample
                     StartCoroutine(RetryConnection(StartVivoxLogin, m_LocalLobby.LobbyID.Value));
                 }
             }
-        }
+        }*/
 
-        void StartVivoxJoin()
+        /*void StartVivoxJoin()
         {
             m_VivoxSetup.JoinLobbyChannel(m_LocalLobby.LobbyID.Value, OnVivoxJoinComplete);
 
@@ -401,7 +401,7 @@ namespace LobbyRelaySample
                     StartCoroutine(RetryConnection(StartVivoxJoin, m_LocalLobby.LobbyID.Value));
                 }
             }
-        }
+        }*/
 
         IEnumerator RetryConnection(Action doConnection, string lobbyId)
         {

@@ -3,7 +3,8 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Coin
   layers:
   - Default
   - TransparentFX
@@ -49,4 +50,7 @@ TagManager:
     locked: 0
   - name: game_effects
     uniqueID: 2257983969
+    locked: 0
+  - name: player
+    uniqueID: 1764791247
     locked: 0

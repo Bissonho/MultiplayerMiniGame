@@ -17,10 +17,7 @@ using ParrelSync;
 
 namespace LobbyRelaySample
 {
-    /// <summary>
-    /// Current state of the local game.
-    /// Set as a flag to allow for the Inspector to select multiple valid states for various UI features.
-    /// </summary>
+
     [Flags]
     public enum GameState
     {
@@ -30,11 +27,7 @@ namespace LobbyRelaySample
         Leaderboard = 8,
     }
 
-    /// <summary>
-    /// Sets up and runs the entire sample.
-    /// All the Data that is important gets updated in here, the GameManager in the mainScene has all the references
-    /// needed to run the game.
-    /// </summary>
+
     public class GameManager : MonoBehaviour
     {
         public LocalLobby LocalLobby => m_LocalLobby;
@@ -100,7 +93,8 @@ namespace LobbyRelaySample
             catch (LobbyServiceException exception)
             {
                 SetGameState(GameState.JoinMenu);
-                LogHandlerSettings.Instance.SpawnErrorPopup($"Error creating lobby : ({exception.ErrorCode}) {exception.Message}");
+                Debug.LogError($"Error creating lobby : ({exception.ErrorCode}) {exception.Message}");
+                //Debug.LogError($"Error creating lobby : ({exception.ErrorCode}) {exception.Message}");
             }
         }
 
@@ -117,7 +111,7 @@ namespace LobbyRelaySample
             catch (LobbyServiceException exception)
             {
                 SetGameState(GameState.JoinMenu);
-                LogHandlerSettings.Instance.SpawnErrorPopup($"Error joining lobby : ({exception.ErrorCode}) {exception.Message}");
+                Debug.LogError($"Error joining lobby : ({exception.ErrorCode}) {exception.Message}");
             }
         }
 
@@ -151,7 +145,7 @@ namespace LobbyRelaySample
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                LogHandlerSettings.Instance.SpawnErrorPopup(
+                Debug.LogError(
                     "Empty Name not allowed."); // Lobby error type, then HTTP error type.
                 return;
             }
@@ -351,7 +345,7 @@ namespace LobbyRelaySample
             catch (LobbyServiceException exception)
             {
                 SetGameState(GameState.JoinMenu);
-                LogHandlerSettings.Instance.SpawnErrorPopup($"Couldn't join Lobby : ({exception.ErrorCode}) {exception.Message}");
+                Debug.LogError($"Couldn't join Lobby : ({exception.ErrorCode}) {exception.Message}");
             }
         }
 

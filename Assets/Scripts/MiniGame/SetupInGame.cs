@@ -143,7 +143,7 @@ namespace LobbyRelaySample.ngo
             if (!m_hasConnectedViaNGO)
             {
                 // If this localPlayer hasn't successfully connected via NGO, forcibly exit the minigame.
-                LogHandlerSettings.Instance.SpawnErrorPopup("Failed to join the game.");
+                Debug.LogError("Failed to join the game.");
                 OnGameEnd();
             }
         }
